@@ -52,16 +52,26 @@ client.on("message", async msg => {
 					);
 				} else {
 					msg.channel.send(
-						"This guild uses the default name format. (" +
+						"This guild uses the default name format. (`" +
 							NAME_FORMAT.replace(/`/g, "\\`") +
-							")"
+							"`)"
 					);
 				}
 			}
 			break;
+		case "reset":
+			if (msg.member.hasPermission("MANAGE_GUILD")) {
+				db.delete(msg.guild.id);
+				msg.channel.send("Guild name format reset.");
+			} else {
+				msg.channel.send(
+					"You are not allowed to reset the name format. (Missing `Manage Server` permission)"
+				);
+			}
+			break;
 		default:
 			msg.channel.send(
-				`You can see/change the name format with '${mention} format [fmt]'.`
+				`You can see/change the name format with '${mention} format [fmt]' and reset it with '${mention} reset'.`
 			);
 			break;
 	}
